@@ -1,0 +1,31 @@
+kind: "Service"
+apiVersion: "v1"
+metadata:
+  name: "mysql"
+  k8s-app: mysql
+spec:
+  ports:
+    - name: "mysql"
+      protocol: "TCP"
+      port: 3306
+      targetPort: 3306
+    - name: "exporter"
+      protocol: "TCP"
+      port: 9104
+      targetPort: 9104 
+
+---
+kind: "Endpoints"
+apiVersion: "v1"
+metadata:
+  name: "mysql"
+  k8s-app: mysql
+subsets: 
+  -
+    addresses:
+      - ip: "192.168.10.108" #The IP Address of the external web server
+    ports:
+      - port: 9104
+        name: "exporter"
+      - port: 3306
+        name: "mysql"
